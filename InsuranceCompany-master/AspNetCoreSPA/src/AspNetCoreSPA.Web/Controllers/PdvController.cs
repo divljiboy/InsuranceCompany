@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCoreSPA.BLL;
 using AspNetCoreSPA.Model.POCOs;
+using Newtonsoft.Json.Linq;
 
 namespace AspNetCoreSPA.Web.Controllers
 {
@@ -36,8 +37,32 @@ namespace AspNetCoreSPA.Web.Controllers
 
         // POST: api/Policy
         [HttpPost]
-        public IActionResult Post([FromBody]Policy polisa)
+        public IActionResult Post([FromBody] JObject stuff)
         {
+
+            Policy polisa = stuff["finalPolicy"].ToObject<Policy>();
+            Client glavniklijent = stuff["ClientNavigation"].ToObject<Client>();
+            Car car = stuff["finalCar"].ToObject<Car>();
+            Client clientcar = stuff["clientCar"].ToObject<Client>();
+            Client clienthouse = stuff["clientHouse"].ToObject<Client>();
+            Home house = stuff["finalHouse"].ToObject<Home>();
+            Destination destination = stuff["finalDestination"].ToObject<Destination>();
+
+            polisa.ClientNavigation = glavniklijent;
+
+            car.Client = clientcar;
+            
+            SubjectOfInsurance subj = new SubjectOfInsurance();
+            subj.Car = car;
+            subj.Home = house;
+            subj.Dst = destination;
+            subj.TpId = 1;
+            polisa.Ii = subj;
+
+
+
+
+
             return Json(_policyBLL.Add(polisa));
         }
 

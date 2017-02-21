@@ -24,7 +24,9 @@
 
             },
             post: function (client) {
-               return $http.post("api/Client", client)
+               $http.post("api/Client", client).then(function(resp){
+                return resp.data;
+               });
            },
               delete : function(client)
                {
