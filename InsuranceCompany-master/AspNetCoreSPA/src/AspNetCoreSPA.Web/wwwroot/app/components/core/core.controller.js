@@ -8,9 +8,10 @@
 
 	MainCtrl.$inject = ['$window', '$scope', '$q', '$http', '$timeout', '$state', '$translate', 'DroolsInfo', 'DroolsHome', 'DroolsVehicle', 'DroolsAllPackages','PolicyService','ClientService','DestinationService','HouseService','CarService','SubjectOfInsuranceService','stateOfOrigin','travelPurpose','sport','RiskOfHouseService','RiskOfCarService'];
     
-	function MainCtrl($window, $scope, $q, $timeout, $http, $state, $translate, DroolsInfo, DroolsHome, DroolsVehicle, DroolsAllPackages,PolicyService,ClientService,DestinationService,HouseService,CarService,SubjectOfInsuranceService,stateOfOrigin,travelPurpose,sport,RiskOfHouseService,RiskOfCarService) {
+	function MainCtrl($window, $scope, $q, $http, $timeout, $state, $translate, DroolsInfo, DroolsHome, DroolsVehicle, DroolsAllPackages,PolicyService,ClientService,DestinationService,HouseService,CarService,SubjectOfInsuranceService,stateOfOrigin,travelPurpose,sport,RiskOfHouseService,RiskOfCarService) {
 
-
+	if (window.location.protocol == "http:")
+         window.location = "https://localhost:44330/";
 	
 
 	    var vm = this;
@@ -65,6 +66,9 @@
 	    var currentYear = new Date().getFullYear();
         
 		vm.stepNo = 0;
+
+
+
 		vm.stepNoNext = function () {
 		    console.log('stepNoNext function');
 		    vm.stepNo = vm.stepNo + 1;
@@ -193,9 +197,9 @@
 
  
         vm.triggerPayPal = function triggerPayPal() {
-           // $('#payPalConfirmation').modal('show');
+            $('#payPalConfirmation').modal('show');
             console.log(vm.finalPriceWithPotencialDiscount);
-PolicyNew();
+			//PolicyNew();
 
 
         }
@@ -217,6 +221,7 @@ PolicyNew();
 
 		      if (vm.polisy.travelType == 'Individual' || vm.polisy.travelType == 'Individualno') {
 		          brKorisnika = 1;
+		          vm.polisy.noAdults=1;
 		          vm.listaKorisnika = [];
 		          vm.listaKorisnika.push({ name: 'Jane', surname: 'Doe', myDate: '', passport: '', jmbg: '', sex: '', email: '', ageType: 'adult' });
 		      }
@@ -388,17 +393,20 @@ PolicyNew();
 				console.log(listofClient);
 
 
-				
+				var clientCar={};
+	    		var finalCar={};
+	    		var risksCar=[];
+					
+	    			
 
-				if(vm.vehicleInsuranceRadio=="true"){
+				if(vm.vehicleInsuranceRadio=='true'){
 
-					var clientCar={};
-	    			var finalCar={};
-	    			var res = vm.vehicleInfo.owner.split(" ");
+					var res = vm.vehicleInfo.owner.split(" ");
 	    			clientCar.Firstname=res[0];
 	    			clientCar.Lastname=res[1];
 	    			clientCar.DateOfBirth="2011-1-1";
 	    			clientCar.Jmbg=vm.vehicleInfo.ownerJMBG;
+
 	    			
 	
 		    			
@@ -407,26 +415,58 @@ PolicyNew();
 					finalCar.LicencePlate=vm.vehicleInfo.serialNo;
 					finalCar.CarStartDate=vm.polisy.date;
 	    			finalCar.CarEndDate=vm.polisy.endDate;
+	    			finalCar.CarType=vm.vehicleInfo.mark;
 
 	    			console.log("Auto")
 					console.log(finalCar);
 					console.log("Vlasnik auta")
 					console.log(clientCar);
+
+
+					if(vm.vehicleInfo.towing){
+						if(vm.vehicleInfo.towing==true)
+						{
+							risksCar.push(16);
+						}
+			    	}
+			    	if(vm.vehicleInfo.repair){
+						if(vm.vehicleInfo.repair==true)
+						{
+							risksCar.push(17);
+						}
+					}
+					if(vm.vehicleInfo.hotel){
+						if(vm.vehicleInfo.hotel==true)
+						{
+							risksCar.push(18);
+						}
+			    	}
+			    	if(vm.vehicleInfo.alternativeTrasnportation){
+						if(vm.vehicleInfo.alternativeTrasnportation=='true')
+						{
+							risksCar.push(19);
+						}
+	    			}
+
 				}
 	    	
-				if(vm.homeInsuranceRadio=="true"){
-
-
-						var clientHouse={}
+	    		var finalHouse={};
+	    		var clientHouse={};
+	    		var risksHome=[]
+						
 	
-		    			clientHouse.Jmbg=vm.homeInfo.ownerJMBG;
+		    			
+		    			
+				if(vm.homeInsuranceRadio=='true'){
+
+
+						clientHouse.Jmbg=vm.homeInfo.ownerJMBG;
 		    			res = vm.homeInfo.owner.split(" ");
 		    			clientHouse.Firstname=res[0];
 		    			clientHouse.Lastname=res[1];
 		    			clientHouse.DateOfBirth="2011-1-1";
 		    			
 	
-		    			var finalHouse={};
 		    			finalHouse.HomeSquares=vm.homeInfo.flatSize;
 		    			finalHouse.HomeBuildingYear=vm.buildYear;
 		    			finalHouse.HomeAddress=vm.homeInfo.address;
@@ -437,6 +477,29 @@ PolicyNew();
 						console.log(finalHouse);
 						console.log("vlasnik kuce")
 						console.log(clientHouse);
+
+
+
+
+						if(vm.homeInfo.flood){
+							if(vm.homeInfo.flood==true)
+							{
+								risksHome.push(13);
+							}
+						}
+						if(vm.homeInfo.fire){
+							if(vm.homeInfo.fire==true)
+							{
+								risksHome.push(14);
+							}
+			    		}
+			    		if(vm.homeInfo.robbery){
+							if(vm.homeInfo.robbery==true)
+							{
+								risksHome.push(15);
+							}
+						}
+
 		    			
 				}
 	
@@ -466,58 +529,33 @@ PolicyNew();
 				finalPrice.PricelistId=1;
 				finalPrice.PlPrice=vm.finalPriceWithPotencialDiscount;
 
-				var risksHome=[]
-				if(vm.homeInfo.flood=="true")
-				{
-					risksHome.push(13);
-				}
-				if(vm.homeInfo.fire=="true")
-				{
-					risksHome.push(14);
-				}
-				if(vm.homeInfo.robbery=="true")
-				{
-					risksHome.push(15);
-				}
-				var risksCar=[];
-				if(vm.vehicleInfo.towing=="true")
-				{
-					risksCar.push(16);
-				}
-				if(vm.vehicleInfo.repair=="true")
-				{
-					risksCar.push(17);
-				}
-				if(vm.vehicleInfo.hotel=="true")
-				{
-					risksCar.push(18);
-				}
-				if(vm.vehicleInfo.alternativeTrasnportation=="true")
-				{
-					risksCar.push(19);
-				}
+
+
+				
 	    		
-	    		
-				PolicyService.post(finalPolicy,ClientNavigation,clientCar,finalCar,clientHouse,finalHouse,finalDestination,finalPrice).then(function(response){
+				PolicyService.post(listofClient,finalPolicy,ClientNavigation,clientCar,finalCar,clientHouse,finalHouse,finalDestination,finalPrice).then(function(response){
 	    			if(response.data){
-	    				var string=response.split(" ");
+	    				var string=response.data.split(" ");
 	    				var idCar=string[0];
 	    				var idHome=string[1];
 	    				var i;
+	    				if(!(idCar=="")){
 	    				for(i=0;i<risksCar.length;i++)
 	    				{
 	    					var roc={};
 	    					roc.RId=risksCar[i];
 	    					roc.Carid=idCar;
 	    					RiskOfCarService.post(roc);
-	    				};
+	    				}};
+
+	    				if(!(idHome=="")){
 	    				for(i=0;i<risksHome.length;i++)
 	    				{
 	    					var roh={};
 	    					roh.RId=risksHome[i];
 	    					roh.HomeId=idHome;
 	    					RiskOfHouseService.post(roh);
-	    				};
+	    				}};
 
 
 	    			}

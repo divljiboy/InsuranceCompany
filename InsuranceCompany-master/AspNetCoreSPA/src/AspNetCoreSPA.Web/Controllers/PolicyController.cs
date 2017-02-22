@@ -48,26 +48,53 @@ namespace AspNetCoreSPA.Web.Controllers
             Home house = stuff["finalHouse"].ToObject<Home>();
             Destination destination = stuff["finalDestination"].ToObject<Destination>();
             PricelistItem pritem = stuff["finalPrice"].ToObject<PricelistItem>();
-            polisa.ClientNavigation = glavniklijent;
+            List<Client> lista = stuff["listofClient"].ToObject<List<Client>>();
 
-            car.Client = clientcar;
-            
             SubjectOfInsurance subj = new SubjectOfInsurance();
-            subj.Car = car;
-            subj.Home = house;
+
+            if (clientcar.Jmbg != null)
+            {
+                car.Client = clientcar;
+                subj.Car = car;
+            }
+           
+            if (clienthouse.Jmbg != null)
+            {
+                house.Client = clienthouse;
+                subj.Home = house;
+                
+            }
+            
             subj.Dst = destination;
-            subj.TpId = 1;
             polisa.Ii = subj;
             polisa.PlItem = pritem;
 
 
+            polisa.ClientNavigation = glavniklijent;
 
             _policyBLL.Add(polisa);
 
-
-
-
-            return Json(polisa.Ii.Car.Carid+" "+polisa.Ii.Home.HomeId);
+            if (lista.Count != 0)
+            {
+                foreach (Client cl in lista)
+                {
+                    cl.Policy = polisa;
+                }
+            }
+            if (clienthouse.Jmbg != null && clientcar.Jmbg != null)
+            {
+               return Json(polisa.Ii.Car.Carid + " " + polisa.Ii.Home.HomeId);
+            }
+            if (clienthouse.Jmbg != null && clientcar.Jmbg == null) {
+                return Json(" " + polisa.Ii.Home.HomeId);
+            }
+            if (clienthouse.Jmbg == null && clientcar.Jmbg != null)
+            {
+                return Json(polisa.Ii.Car.Carid + " ");
+            }
+            else {
+                return Json(" ");
+            }
         }
 
         // PUT: api/Policy/5

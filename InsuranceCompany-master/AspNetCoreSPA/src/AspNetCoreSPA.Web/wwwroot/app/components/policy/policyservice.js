@@ -21,7 +21,7 @@
 
 
            },
-           post: function (finalPolicy2,ClientNavigation2,clientCar2,finalCar2,clientHouse2,finalHouse2,finalDestination2,finalPrice2)
+           post: function (listofClient2,finalPolicy2,ClientNavigation2,clientCar2,finalCar2,clientHouse2,finalHouse2,finalDestination2,finalPrice2)
            {
             var req = {
               method: 'POST',
@@ -29,7 +29,7 @@
               headers: {
                 'Content-Type': 'application/json;charset=utf-8'
               },
-              data: JSON.stringify({finalPolicy:finalPolicy2,ClientNavigation:ClientNavigation2,clientCar:clientCar2,finalCar:finalCar2,clientHouse:clientHouse2,finalHouse:finalHouse2,finalDestination:finalDestination2,finalPrice:finalPrice2})
+              data: JSON.stringify({listofClient:listofClient2,finalPolicy:finalPolicy2,ClientNavigation:ClientNavigation2,clientCar:clientCar2,finalCar:finalCar2,clientHouse:clientHouse2,finalHouse:finalHouse2,finalDestination:finalDestination2,finalPrice:finalPrice2})
 
             }
             return $http(req);
