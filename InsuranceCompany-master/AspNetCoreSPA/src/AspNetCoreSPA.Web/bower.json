@@ -13,7 +13,8 @@
     "md-steppers": "^0.3.4",
     "angular-translate": "^2.13.1",
     "ngstorage": "0.3.10",
-    "angular-resource": "^1.6.1"
+    "angular-resource": "^1.6.1",
+    "jspdf": "^1.3.2"
   },
   "overrides": {
     "bootstrap": {
