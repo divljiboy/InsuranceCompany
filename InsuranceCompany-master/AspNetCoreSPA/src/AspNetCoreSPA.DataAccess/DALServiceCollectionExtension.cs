@@ -10,7 +10,7 @@ namespace AspNetCoreSPA
         {
             services.AddTransient<IRepository<Client>, Repository<Client>>();
             services.AddTransient<IRepository<Car>, Repository<Car>>();
-            services.AddTransient<IRepository<Country>, Repository<Country>>();
+            services.AddTransient<IRepository<StateOfOrigin>, Repository<StateOfOrigin>>();
             services.AddTransient<IRepository<AgeGroup>, Repository<AgeGroup>>();
             services.AddTransient<IRepository<Coefficient>, Repository<Coefficient>>();
             services.AddTransient<IRepository<Continent>, Repository<Continent>>();

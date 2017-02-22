@@ -8,19 +8,19 @@ namespace AspNetCoreSPA.BLL
 {
     public class CountryBLL : ICountryBLL
     {
-        private readonly IRepository<Country> _countryDAL;
+        private readonly IRepository<StateOfOrigin> _countryDAL;
 
-        public CountryBLL(IRepository<Country> countryDAL)
+        public CountryBLL(IRepository<StateOfOrigin> countryDAL)
         {
             _countryDAL = countryDAL;
         }
 
-        public int Add(Country c)
+        public int Add(StateOfOrigin c)
         {
             throw new NotImplementedException();
         }
 
-        public List<Country> GetAll()
+        public List<StateOfOrigin> GetAll()
         {
             try
             {

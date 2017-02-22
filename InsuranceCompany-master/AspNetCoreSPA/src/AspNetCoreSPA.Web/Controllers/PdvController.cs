@@ -6,67 +6,42 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using AspNetCoreSPA.BLL;
 using AspNetCoreSPA.Model.POCOs;
-using Newtonsoft.Json.Linq;
 
 namespace AspNetCoreSPA.Web.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Policy")]
-    public class PolicyController : Controller
+    [Route("api/Pdv")]
+    public class PdvController : Controller
     {
-        private readonly IPolicyBLL _policyBLL;
+        private readonly IPdvBLL _pdvBLL;
 
-        public PolicyController(IPolicyBLL policyBLL)
+        public PdvController(IPdvBLL pdvBLL)
         {
-            _policyBLL = policyBLL;
+            _pdvBLL = pdvBLL;
         }
 
-        // GET: api/Policy
+        // GET: api/Pdv
         [HttpGet]
         public IActionResult Get()
         {
-            return Json(_policyBLL.GetAll());
+            return Json(_pdvBLL.GetAll());
         }
 
-        // GET: api/Policy/5
+        // GET: api/Pdv/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             return Json("value" + id);
         }
 
-        // POST: api/Policy
+        // POST: api/Pdv
         [HttpPost]
-        public IActionResult Post([FromBody] JObject stuff)
+        public IActionResult Post([FromBody]Pdv value)
         {
-
-            Policy polisa = stuff["finalPolicy"].ToObject<Policy>();
-            Client glavniklijent = stuff["ClientNavigation"].ToObject<Client>();
-            Car car = stuff["finalCar"].ToObject<Car>();
-            Client clientcar = stuff["clientCar"].ToObject<Client>();
-            Client clienthouse = stuff["clientHouse"].ToObject<Client>();
-            Home house = stuff["finalHouse"].ToObject<Home>();
-            Destination destination = stuff["finalDestination"].ToObject<Destination>();
-
-            polisa.ClientNavigation = glavniklijent;
-
-            car.Client = clientcar;
-            
-            SubjectOfInsurance subj = new SubjectOfInsurance();
-            subj.Car = car;
-            subj.Home = house;
-            subj.Dst = destination;
-            subj.TpId = 1;
-            polisa.Ii = subj;
-
-
-
-
-
-            return Json(_policyBLL.Add(polisa));
+            return Json(_pdvBLL.Add(value));
         }
 
-        // PUT: api/Policy/5
+        // PUT: api/Pdv/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {

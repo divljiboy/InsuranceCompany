@@ -12,7 +12,8 @@ namespace AspNetCoreSPA.Model.POCOs
         }
 
         public int HomeId { get; set; }
-        public int HomeSquares { get; set; }
+        public int? ClientId { get; set; }
+        public int? HomeSquares { get; set; }
         public DateTime? HomeBuildingYear { get; set; }
         public string HomeAddress { get; set; }
         public int? HomeValue { get; set; }
@@ -21,5 +22,6 @@ namespace AspNetCoreSPA.Model.POCOs
 
         public virtual ICollection<RiskOfHouse> RiskOfHouse { get; set; }
         public virtual ICollection<SubjectOfInsurance> SubjectOfInsurance { get; set; }
+        public virtual Client Client { get; set; }
     }
 }

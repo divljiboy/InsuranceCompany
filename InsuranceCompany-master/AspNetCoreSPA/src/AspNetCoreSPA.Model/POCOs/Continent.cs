@@ -7,7 +7,7 @@ namespace AspNetCoreSPA.Model.POCOs
     {
         public Continent()
         {
-            Country = new HashSet<Country>();
+            StateOfOrigin = new HashSet<StateOfOrigin>();
         }
 
         public int ContinentId { get; set; }
@@ -15,7 +15,7 @@ namespace AspNetCoreSPA.Model.POCOs
         public string ContinentNameEn { get; set; }
         public string ContinentNameSrb { get; set; }
 
-        public virtual ICollection<Country> Country { get; set; }
+        public virtual ICollection<StateOfOrigin> StateOfOrigin { get; set; }
         public virtual Coefficient Coeff { get; set; }
     }
 }

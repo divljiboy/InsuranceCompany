@@ -8,6 +8,7 @@ namespace AspNetCoreSPA.Model.POCOs
         public Client()
         {
             Car = new HashSet<Car>();
+            Home = new HashSet<Home>();
             PolicyNavigation = new HashSet<Policy>();
         }
 
@@ -16,13 +17,14 @@ namespace AspNetCoreSPA.Model.POCOs
         public int? PolicyId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public DateTime? DateOfBirth { get; set; }
         public string Jmbg { get; set; }
         public string Phone { get; set; }
         public decimal? PassportNumber { get; set; }
         public string Sex { get; set; }
 
         public virtual ICollection<Car> Car { get; set; }
+        public virtual ICollection<Home> Home { get; set; }
         public virtual ICollection<Policy> PolicyNavigation { get; set; }
         public virtual AgeGroup Ag { get; set; }
         public virtual Policy Policy { get; set; }

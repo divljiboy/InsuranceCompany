@@ -11,7 +11,6 @@ namespace AspNetCoreSPA.EntityFramework
         public virtual DbSet<Client> Client { get; set; }
         public virtual DbSet<Coefficient> Coefficient { get; set; }
         public virtual DbSet<Continent> Continent { get; set; }
-        public virtual DbSet<Country> Country { get; set; }
         public virtual DbSet<Destination> Destination { get; set; }
         public virtual DbSet<Home> Home { get; set; }
         public virtual DbSet<InsurancePackage> InsurancePackage { get; set; }
@@ -24,10 +23,12 @@ namespace AspNetCoreSPA.EntityFramework
         public virtual DbSet<Risk> Risk { get; set; }
         public virtual DbSet<RiskOfCar> RiskOfCar { get; set; }
         public virtual DbSet<RiskOfHouse> RiskOfHouse { get; set; }
+        public virtual DbSet<StateOfOrigin> StateOfOrigin { get; set; }
         public virtual DbSet<SubjectOfInsurance> SubjectOfInsurance { get; set; }
         public virtual DbSet<TravelActivityTravelPurpose> TravelActivityTravelPurpose { get; set; }
         public virtual DbSet<TravelPurpose> TravelPurpose { get; set; }
         public virtual DbSet<TypeOfPackage> TypeOfPackage { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -64,7 +65,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Coeff)
                     .WithMany(p => p.AgeGroup)
                     .HasForeignKey(d => d.CoeffId)
-                    .HasConstraintName("FK_AGE_GROU_RELATIONS_COEFFICI");
+                    .HasConstraintName("FK2ck6a0ypv1qo2mi3eo9gl2hix");
             });
 
             modelBuilder.Entity<Car>(entity =>
@@ -107,8 +108,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.Car)
                     .HasForeignKey(d => d.ClientId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_CAR_RELATIONS_CLIENT");
+                    .HasConstraintName("FKqudpn3oci54oqa8wgn4wdo7ab");
             });
 
             modelBuilder.Entity<Client>(entity =>
@@ -130,17 +130,14 @@ namespace AspNetCoreSPA.EntityFramework
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.Firstname)
-                    .IsRequired()
                     .HasColumnName("FIRSTNAME")
                     .HasColumnType("varchar(60)");
 
                 entity.Property(e => e.Jmbg)
-                    .IsRequired()
                     .HasColumnName("JMBG")
                     .HasColumnType("varchar(30)");
 
                 entity.Property(e => e.Lastname)
-                    .IsRequired()
                     .HasColumnName("LASTNAME")
                     .HasColumnType("varchar(70)");
 
@@ -161,12 +158,12 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Ag)
                     .WithMany(p => p.Client)
                     .HasForeignKey(d => d.AgId)
-                    .HasConstraintName("FK_CLIENT_IS_AGE_GROU");
+                    .HasConstraintName("FKskkwgife1njo4tqvd1gro5wmx");
 
                 entity.HasOne(d => d.Policy)
                     .WithMany(p => p.Client)
                     .HasForeignKey(d => d.PolicyId)
-                    .HasConstraintName("FK_CLIENT_RELATIONS_POLICY");
+                    .HasConstraintName("FKjhl88642aqed8sco1mbj9gt6h");
             });
 
             modelBuilder.Entity<Coefficient>(entity =>
@@ -210,37 +207,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Coeff)
                     .WithMany(p => p.Continent)
                     .HasForeignKey(d => d.CoeffId)
-                    .HasConstraintName("FK_CONTINEN_RELATIONS_COEFFICI");
-            });
-
-            modelBuilder.Entity<Country>(entity =>
-            {
-                entity.HasKey(e => e.StId)
-                    .HasName("PK_STATE_OF_ORIGIN");
-
-                entity.ToTable("STATE_OF_ORIGIN");
-
-                entity.HasIndex(e => e.ContinentId)
-                    .HasName("RELATIONSHIP_41_FK");
-
-                entity.Property(e => e.StId).HasColumnName("ST_ID");
-
-                entity.Property(e => e.ContinentId).HasColumnName("CONTINENT_ID");
-
-                entity.Property(e => e.StNameEn)
-                    .HasColumnName("ST_NAME_EN")
-                    .HasColumnType("varchar(50)");
-
-                entity.Property(e => e.StNameSrb)
-                    .IsRequired()
-                    .HasColumnName("ST_NAME_SRB")
-                    .HasColumnType("varchar(30)");
-
-                entity.HasOne(d => d.Continent)
-                    .WithMany(p => p.Country)
-                    .HasForeignKey(d => d.ContinentId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_STATE_OF_RELATIONS_CONTINEN");
+                    .HasConstraintName("FKldwtatkfm386ftdw9e120gl9a");
             });
 
             modelBuilder.Entity<Destination>(entity =>
@@ -262,17 +229,21 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.St)
                     .WithMany(p => p.Destination)
                     .HasForeignKey(d => d.StId)
-                    .HasConstraintName("FK_DESTINAT_RELATIONS_STATE_OF");
+                    .HasConstraintName("FK8c0x6mbsdw8w4y3if0ed26adh");
             });
 
             modelBuilder.Entity<Home>(entity =>
             {
                 entity.ToTable("HOME");
 
+                entity.HasIndex(e => e.ClientId)
+                    .HasName("HOUSE_OWNER_FK");
+
                 entity.Property(e => e.HomeId).HasColumnName("HOME_ID");
 
+                entity.Property(e => e.ClientId).HasColumnName("CLIENT_ID");
+
                 entity.Property(e => e.HomeAddress)
-                    .IsRequired()
                     .HasColumnName("HOME_ADDRESS")
                     .HasColumnType("varchar(30)");
 
@@ -291,6 +262,11 @@ namespace AspNetCoreSPA.EntityFramework
                     .HasColumnType("datetime");
 
                 entity.Property(e => e.HomeValue).HasColumnName("HOME_VALUE");
+
+                entity.HasOne(d => d.Client)
+                    .WithMany(p => p.Home)
+                    .HasForeignKey(d => d.ClientId)
+                    .HasConstraintName("FK_HOME_HOUSE_OWN_CLIENT");
             });
 
             modelBuilder.Entity<InsurancePackage>(entity =>
@@ -331,12 +307,12 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.PlItem)
                     .WithMany(p => p.InsurancePackage)
                     .HasForeignKey(d => d.PlItemId)
-                    .HasConstraintName("FK_INSURANC_RELATIONS_PRICELIS");
+                    .HasConstraintName("FKsrswyhkry12eo3385x2pdmj8l");
 
                 entity.HasOne(d => d.Top)
                     .WithMany(p => p.InsurancePackage)
                     .HasForeignKey(d => d.TopId)
-                    .HasConstraintName("FK_INSURANC_RELATIONS_TYPE_OF_");
+                    .HasConstraintName("FKioi3b8frwo954n0jk3aw49bpn");
             });
 
             modelBuilder.Entity<ItemsOfPackage>(entity =>
@@ -372,7 +348,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Package)
                     .WithMany(p => p.ItemsOfPackage)
                     .HasForeignKey(d => d.PackageId)
-                    .HasConstraintName("FK_ITEMS_OF_RELATIONS_INSURANC");
+                    .HasConstraintName("FKqnq0a1eu2i4dx7nk368ay71sv");
             });
 
             modelBuilder.Entity<Pdv>(entity =>
@@ -433,36 +409,32 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.ClientNavigation)
                     .WithMany(p => p.PolicyNavigation)
                     .HasForeignKey(d => d.ClientId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_POLICY_OWNER_CLIENT");
+                    .HasConstraintName("FK9mo7soelkv44xg07khd7lkn3u");
 
                 entity.HasOne(d => d.Ii)
                     .WithMany(p => p.Policy)
                     .HasForeignKey(d => d.IiId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_POLICY_RELATIONS_SUBJECT_");
+                    .HasConstraintName("FKpb1yhnajo646ctcg4b1axr6p8");
 
                 entity.HasOne(d => d.Package)
                     .WithMany(p => p.Policy)
                     .HasForeignKey(d => d.PackageId)
-                    .HasConstraintName("FK_POLICY_RELATIONS_INSURANC");
+                    .HasConstraintName("FKgv2wbbliy5t38ta6fr8728835");
 
                 entity.HasOne(d => d.Pdv)
                     .WithMany(p => p.Policy)
                     .HasForeignKey(d => d.PdvId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_POLICY_FOR_CALCT_PDV");
+                    .HasConstraintName("FKsbdoesuv13039811jvasuoipd");
 
                 entity.HasOne(d => d.PlItem)
                     .WithMany(p => p.Policy)
                     .HasForeignKey(d => d.PlItemId)
-                    .HasConstraintName("FK_POLICY_INSURANCE_PRICELIS");
+                    .HasConstraintName("FK5y2ffe3y4blou3a9mdgxulm6o");
 
                 entity.HasOne(d => d.R)
                     .WithMany(p => p.Policy)
                     .HasForeignKey(d => d.RId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_POLICY_POSSIBLE__RISK");
+                    .HasConstraintName("FKnwfa62b1bv90cymutkqb9fjfp");
             });
 
             modelBuilder.Entity<Pricelist>(entity =>
@@ -502,7 +474,7 @@ namespace AspNetCoreSPA.EntityFramework
                     .WithMany(p => p.PricelistItem)
                     .HasForeignKey(d => d.PricelistId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_PRICELIS_RELATIONS_PRICELIS");
+                    .HasConstraintName("FKrj0fqhdlepbpcno6pidue6b0w");
             });
 
             modelBuilder.Entity<RateOfPdv>(entity =>
@@ -531,7 +503,7 @@ namespace AspNetCoreSPA.EntityFramework
                     .WithMany(p => p.RateOfPdv)
                     .HasForeignKey(d => d.PdvId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RATE_OF__IN_NEED_PDV");
+                    .HasConstraintName("FKc33p98wy9ieru0k0mxvqt5der");
             });
 
             modelBuilder.Entity<Risk>(entity =>
@@ -549,7 +521,6 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.Property(e => e.CoeffId).HasColumnName("COEFF_ID");
 
                 entity.Property(e => e.RDescriptionEn)
-                    .IsRequired()
                     .HasColumnName("R_DESCRIPTION_EN")
                     .HasColumnType("varchar(2000)");
 
@@ -558,7 +529,6 @@ namespace AspNetCoreSPA.EntityFramework
                     .HasColumnType("varchar(2000)");
 
                 entity.Property(e => e.RNameEn)
-                    .IsRequired()
                     .HasColumnName("R_NAME_EN")
                     .HasColumnType("varchar(30)");
 
@@ -569,8 +539,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Coeff)
                     .WithMany(p => p.Risk)
                     .HasForeignKey(d => d.CoeffId)
-                    .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RISK_RELATIONS_COEFFICI");
+                    .HasConstraintName("FK6ty7h7rf3nrlt95l1b40cbw8v");
             });
 
             modelBuilder.Entity<RiskOfCar>(entity =>
@@ -586,9 +555,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasIndex(e => e.RId)
                     .HasName("RISK_OF_CAR2_FK");
 
-                entity.Property(e => e.RocId)
-                    .HasColumnName("ROC_ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.RocId).HasColumnName("ROC_ID");
 
                 entity.Property(e => e.Carid).HasColumnName("CARID");
 
@@ -598,13 +565,13 @@ namespace AspNetCoreSPA.EntityFramework
                     .WithMany(p => p.RiskOfCar)
                     .HasForeignKey(d => d.Carid)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RISK_OF__RISK_OF_C_CAR");
+                    .HasConstraintName("FKj1un6pij1k16m1gbbyumx9ly9");
 
                 entity.HasOne(d => d.R)
                     .WithMany(p => p.RiskOfCar)
                     .HasForeignKey(d => d.RId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RISK_OF__RISK_OF_C_RISK");
+                    .HasConstraintName("FKqfi048hha2no1a6xn99l87s5s");
             });
 
             modelBuilder.Entity<RiskOfHouse>(entity =>
@@ -620,9 +587,7 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasIndex(e => e.RId)
                     .HasName("RISK_OF_HOUSE_FK");
 
-                entity.Property(e => e.RohId)
-                    .HasColumnName("ROH_ID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.RohId).HasColumnName("ROH_ID");
 
                 entity.Property(e => e.HomeId).HasColumnName("HOME_ID");
 
@@ -632,13 +597,43 @@ namespace AspNetCoreSPA.EntityFramework
                     .WithMany(p => p.RiskOfHouse)
                     .HasForeignKey(d => d.HomeId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RISK_OF__RISK_OF_H_HOME");
+                    .HasConstraintName("FK53f0mqy8v3nabv18t9h3bmlhj");
 
                 entity.HasOne(d => d.R)
                     .WithMany(p => p.RiskOfHouse)
                     .HasForeignKey(d => d.RId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_RISK_OF__RISK_OF_H_RISK");
+                    .HasConstraintName("FK5y0jscr5bk5twvwajybcn0b78");
+            });
+
+            modelBuilder.Entity<StateOfOrigin>(entity =>
+            {
+                entity.HasKey(e => e.StId)
+                    .HasName("PK_STATE_OF_ORIGIN");
+
+                entity.ToTable("STATE_OF_ORIGIN");
+
+                entity.HasIndex(e => e.ContinentId)
+                    .HasName("RELATIONSHIP_41_FK");
+
+                entity.Property(e => e.StId).HasColumnName("ST_ID");
+
+                entity.Property(e => e.ContinentId).HasColumnName("CONTINENT_ID");
+
+                entity.Property(e => e.StNameEn)
+                    .HasColumnName("ST_NAME_EN")
+                    .HasColumnType("varchar(50)");
+
+                entity.Property(e => e.StNameSrb)
+                    .IsRequired()
+                    .HasColumnName("ST_NAME_SRB")
+                    .HasColumnType("varchar(30)");
+
+                entity.HasOne(d => d.Continent)
+                    .WithMany(p => p.StateOfOrigin)
+                    .HasForeignKey(d => d.ContinentId)
+                    .OnDelete(DeleteBehavior.Restrict)
+                    .HasConstraintName("FKrpyquw2tnyphtlfflvm2g9s2n");
             });
 
             modelBuilder.Entity<SubjectOfInsurance>(entity =>
@@ -673,22 +668,22 @@ namespace AspNetCoreSPA.EntityFramework
                 entity.HasOne(d => d.Car)
                     .WithMany(p => p.SubjectOfInsurance)
                     .HasForeignKey(d => d.Carid)
-                    .HasConstraintName("FK_SUBJECT__RELATIONS_CAR");
+                    .HasConstraintName("FK8ukpo4thu5y5t7rxnf38fj4vx");
 
                 entity.HasOne(d => d.Dst)
                     .WithMany(p => p.SubjectOfInsurance)
                     .HasForeignKey(d => d.DstId)
-                    .HasConstraintName("FK_SUBJECT__RELATIONS_DESTINAT");
+                    .HasConstraintName("FKl6xju5p46cgdpuj4crn0xs1ly");
 
                 entity.HasOne(d => d.Home)
                     .WithMany(p => p.SubjectOfInsurance)
                     .HasForeignKey(d => d.HomeId)
-                    .HasConstraintName("FK_SUBJECT__RELATIONS_HOME");
+                    .HasConstraintName("FKmqvri2dov0snthne4169fhbac");
 
                 entity.HasOne(d => d.Tp)
                     .WithMany(p => p.SubjectOfInsurance)
                     .HasForeignKey(d => d.TpId)
-                    .HasConstraintName("FK_SUBJECT__RELATIONS_TRAVEL_P");
+                    .HasConstraintName("FKh7tj710ed4q1xwn863ntw59ew");
             });
 
             modelBuilder.Entity<TravelActivityTravelPurpose>(entity =>
@@ -714,13 +709,13 @@ namespace AspNetCoreSPA.EntityFramework
                     .WithMany(p => p.TravelActivityTravelPurpose)
                     .HasForeignKey(d => d.RId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_TRAVEL_A_TRAVEL_AC_RISK");
+                    .HasConstraintName("FK4ux3r9wx9agrvinlc3m5qnpd9");
 
                 entity.HasOne(d => d.Tp)
                     .WithMany(p => p.TravelActivityTravelPurpose)
                     .HasForeignKey(d => d.TpId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_TRAVEL_A_TRAVEL_AC_TRAVEL_P");
+                    .HasConstraintName("FK7b465nog6jhyl5whft7dfk4q6");
             });
 
             modelBuilder.Entity<TravelPurpose>(entity =>
@@ -750,7 +745,7 @@ namespace AspNetCoreSPA.EntityFramework
                     .WithMany(p => p.TravelPurpose)
                     .HasForeignKey(d => d.PackageId)
                     .OnDelete(DeleteBehavior.Restrict)
-                    .HasConstraintName("FK_TRAVEL_P_RELATIONS_INSURANC");
+                    .HasConstraintName("FK56yr5f7th5iiugwdv5jxkjv1f");
             });
 
             modelBuilder.Entity<TypeOfPackage>(entity =>

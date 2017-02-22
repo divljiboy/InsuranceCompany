@@ -12,7 +12,7 @@ namespace AspNetCoreSPA.Model.POCOs
         }
 
         public int Carid { get; set; }
-        public int ClientId { get; set; }
+        public int? ClientId { get; set; }
         public DateTime? Year { get; set; }
         public int? ChassisNumber { get; set; }
         public string LicencePlate { get; set; }

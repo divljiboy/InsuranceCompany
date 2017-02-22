@@ -11,13 +11,13 @@ namespace AspNetCoreSPA.Model.POCOs
         }
 
         public int PolicyId { get; set; }
-        public int RId { get; set; }
+        public int? RId { get; set; }
         public int? PackageId { get; set; }
-        public int ClientId { get; set; }
-        public int PdvId { get; set; }
+        public int? ClientId { get; set; }
+        public int? PdvId { get; set; }
         public int? PlItemId { get; set; }
-        public int IiId { get; set; }
-        public DateTime PolicyStartOfInsurance { get; set; }
+        public int? IiId { get; set; }
+        public DateTime? PolicyStartOfInsurance { get; set; }
         public DateTime? PolicyDstEndOfInsurance { get; set; }
 
         public virtual ICollection<Client> Client { get; set; }

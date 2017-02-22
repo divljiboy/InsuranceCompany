@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace AspNetCoreSPA.Model.POCOs
 {
-    public partial class Country
+    public partial class StateOfOrigin
     {
-        public Country()
+        public StateOfOrigin()
         {
             Destination = new HashSet<Destination>();
         }

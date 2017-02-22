@@ -15,6 +15,6 @@ namespace AspNetCoreSPA.Model.POCOs
         public int DstDays { get; set; }
 
         public virtual ICollection<SubjectOfInsurance> SubjectOfInsurance { get; set; }
-        public virtual Country St { get; set; }
+        public virtual StateOfOrigin St { get; set; }
     }
 }

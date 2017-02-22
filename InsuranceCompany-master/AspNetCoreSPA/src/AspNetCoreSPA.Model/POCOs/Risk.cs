@@ -14,7 +14,7 @@ namespace AspNetCoreSPA.Model.POCOs
         }
 
         public int RId { get; set; }
-        public int CoeffId { get; set; }
+        public int? CoeffId { get; set; }
         public string RNameEn { get; set; }
         public string RDescriptionEn { get; set; }
         public string RNameSrb { get; set; }

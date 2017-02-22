@@ -13,45 +13,6 @@
 
 	
 
-	/*	var mojafunkcija=function(){
-		
-		var brojac=6;
-
-		var riskofhouse={}
-
-	    		riskofhouse.HomeId="1";
-	    		riskofhouse.RId="1";
-	    		
-	    		riskofhouse.RohId="919";
-	    		var idHouseeee=0;
-	    		
-	    		RiskOfHouseService.post(riskofhouse).then(function(res){
-	    			if(res.data){
-	    			idHouseeee=res.data;
-	    			console.log(idHouseeee);
-	    		};
-	    		//aj probajs ada
-	    		})
-
-		};
-
-		$scope.mojafunkcija = mojafunkcija;
-/*
-	 var brojac=6;
-
-		var riskofcar={}
-
-	    		riskofcar.Carid="1";
-	    		riskofcar.RId="1";
-	    		brojac=brojac+1;
-	    		riskofcar.RocId=brojac;
-	    		
-	    		RiskOfCarService.post(riskofcar, function(response){
-      			var id = response;
-      			console.log(id);
-   }); */  		
-
-
 	    var vm = this;
 	    $scope.myDate = new Date();
 	    $scope.minDate = new Date(
@@ -195,23 +156,29 @@
 		
 
         vm.currentUser;
+        var packageRisk=-1;
 
         vm.setPackage1Selected = function setPackage1Selected(){
             vm.package1Selected = true;
             vm.package2Selected = false;
             vm.package3Selected = false;
+            packageRisk=1;
         }
 
         vm.setPackage2Selected = function setPackage2Selected() {
             vm.package1Selected = false;
             vm.package2Selected = true;
             vm.package3Selected = false;
+            packageRisk=2;
+     
         }
 
         vm.setPackage3Selected = function setPackage3Selected() {
             vm.package1Selected = false;
             vm.package2Selected = false;
             vm.package3Selected = true;
+            packageRisk=3;
+     
         }
 
         vm.setUserPrice = function setUserPrice() {
@@ -486,19 +453,73 @@ PolicyNew();
 
 	    		var finalPolicy={};
 	    		finalPolicy.RId=1;
-	    		finalPolicy.PackageId=1;
+	    		finalPolicy.PackageId=packageRisk;
 	    		finalPolicy.PdvId=1;
-	    		finalPolicy.PlItemId=1;
-	    		finalPolicy.IiId=1;
 	    		finalPolicy.PolicyStartOfInsurance=vm.polisy.date;
 	    		finalPolicy.PolicyDstEndOfInsurance=vm.polisy.endDate;
 	    		console.log("Polisa")
 				console.log(finalPolicy);
+
+
+
+				var finalPrice={};
+				finalPrice.PricelistId=1;
+				finalPrice.PlPrice=vm.finalPriceWithPotencialDiscount;
+
+				var risksHome=[]
+				if(vm.homeInfo.flood=="true")
+				{
+					risksHome.push(13);
+				}
+				if(vm.homeInfo.fire=="true")
+				{
+					risksHome.push(14);
+				}
+				if(vm.homeInfo.robbery=="true")
+				{
+					risksHome.push(15);
+				}
+				var risksCar=[];
+				if(vm.vehicleInfo.towing=="true")
+				{
+					risksCar.push(16);
+				}
+				if(vm.vehicleInfo.repair=="true")
+				{
+					risksCar.push(17);
+				}
+				if(vm.vehicleInfo.hotel=="true")
+				{
+					risksCar.push(18);
+				}
+				if(vm.vehicleInfo.alternativeTrasnportation=="true")
+				{
+					risksCar.push(19);
+				}
 	    		
 	    		
-				PolicyService.post(finalPolicy,ClientNavigation,clientCar,finalCar,clientHouse,finalHouse,finalDestination).then(function(response){
+				PolicyService.post(finalPolicy,ClientNavigation,clientCar,finalCar,clientHouse,finalHouse,finalDestination,finalPrice).then(function(response){
 	    			if(response.data){
-	    				idPolicy=response.data;
+	    				var string=response.split(" ");
+	    				var idCar=string[0];
+	    				var idHome=string[1];
+	    				var i;
+	    				for(i=0;i<risksCar.length;i++)
+	    				{
+	    					var roc={};
+	    					roc.RId=risksCar[i];
+	    					roc.Carid=idCar;
+	    					RiskOfCarService.post(roc);
+	    				};
+	    				for(i=0;i<risksHome.length;i++)
+	    				{
+	    					var roh={};
+	    					roh.RId=risksHome[i];
+	    					roh.HomeId=idHome;
+	    					RiskOfHouseService.post(roh);
+	    				};
+
+
 	    			}
 	    		},function(response){
 	    			alert("Nije uspelo")
