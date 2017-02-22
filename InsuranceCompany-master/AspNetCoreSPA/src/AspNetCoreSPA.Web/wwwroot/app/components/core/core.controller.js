@@ -14,6 +14,9 @@
          window.location = "https://localhost:44330/";
 	
 
+     	 	   
+
+
 	    var vm = this;
 	    $scope.myDate = new Date();
 	    $scope.minDate = new Date(
@@ -35,7 +38,11 @@
            
 	    $scope.changeLanguage = function (langKey) {
 	        $translate.use(langKey);
-	        //odraditi poziv i dodeliti ng modelu za odredjene entite
+	        var mySelect = document.querySelector('md-select#translateRefresh');
+		    var ngModelCtrl = angular.element(mySelect).controller('ngModel');
+
+
+			ngModelCtrl.$render();  
 	    };
 
 	    var getStates = function () {
@@ -58,6 +65,7 @@
 	    function onsuccessSport(result) {
 	        vm.sport = {}
 	        vm.sport = result;
+
 	    }
 
 	    $scope.choices = [];
@@ -505,9 +513,11 @@
 	
 		    	var oneDay = 24*60*60*1000;
 				var finalDestination={};
-		    	finalDestination.StId=1;//ovooooooooooo ne zaboravi
-		    	//var diffDays = Math.round(Math.abs((parseDate(vm.polisy.date).getTime() - parseDate(vm.polisy.endDate).getTime())/(oneDay)));
-		    	finalDestination.DstDays=5;
+		    	finalDestination.StId=vm.polisy.destination.stId;//ovooooooooooo ne zaboravi
+		    	var startDate = new Date(vm.polisy.date)
+             	var endDate = new Date(vm.polisy.endDate)
+
+             	finalDestination.DstDays=Math.ceil(Math.abs(startDate - endDate)) / oneDay + 1;
 		    			
 		    	console.log("Destinacija")
 				console.log(finalDestination);
@@ -515,7 +525,12 @@
 
 
 	    		var finalPolicy={};
-	    		finalPolicy.RId=1;
+	    		if(vm.polisy.sport){
+	    		finalPolicy.RId=vm.polisy.sport.rId;
+	    	    }else
+	    	    {
+	    	    	finalPolicy.RId=20;
+	    	    }
 	    		finalPolicy.PackageId=packageRisk;
 	    		finalPolicy.PdvId=1;
 	    		finalPolicy.PolicyStartOfInsurance=vm.polisy.date;
@@ -563,6 +578,7 @@
 	    		},function(response){
 	    			alert("Nije uspelo")
 	    		})
+
 
 				
 		}
